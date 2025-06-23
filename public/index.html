@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filme _ CRUD</title>
+    <link rel="shortcut icon" href="img/rolo-de-filme.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Filmes List</h1>
+
+            <div class="formulario-container">
+            <form id="form-filme">
+
+               <input type="hidden" id="id" />
+
+                <div class="campo-formulario">
+                <label for="titulo">Título:</label>
+                <input type="text" id="titulo" name="titulo" required>
+                </div>
+
+                <div class="campo-formulario">
+                <label for="genero">Genero:</label>
+                <input type="text" id="genero" name="genero" required>
+                </div>
+
+                <div class="campo-formulario">
+                <label for="duracao">Duração:</label>
+                <input type="text" id="duracao" name="duracao" required>
+                </div>
+
+                <div class="campo-formulario">
+                <label for="diretor">Diretor:</label>
+                <input type="text" id="diretor" name="diretor" required>
+                </div>
+
+                <button class="botao-adicionar" type="submit">Adicionar Filme</button>
+            </form>
+            </div>
+
+    <div class="tabela-container">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>titulo</th>
+          <th>genero</th>
+          <th>duracao</th>
+          <th>diretor</th>
+        </tr>
+      </thead>
+
+        <tbody id="filmeTable"></tbody>
+
+    </table>
+  </div>
+
+    <script>
+    const API_URL = "http://localhost:3000/filmes";
+    
+
+    async function carregarFilmes() {
+      const res = await fetch(API_URL);
+      const filmes = await res.json();
+      const tabela = document.getElementById("filmeTable");
+      tabela.innerHTML = "";
+
+      filmes.forEach(filme => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${filme.titulo}</td>
+          <td>${filme.duracao}</td>
+          <td>${filme.genero}</td>
+          <td>${filme.diretor}</td>
+          <td class="actions">
+            <button onclick="editarFilme(${filme.idfilmes})" class="botao editar" >Editar</button>
+            <button onclick="excluirFilme(${filme.idfilmes})" class="botao excluir">Excluir</button>
+          </td>
+        `;
+        tabela.appendChild(row);
+      });
+
+    }
+
+    async function salvarFilmes(e) {
+      e.preventDefault();
+
+      const id = document.getElementById("idfilmes").value;
+
+      const data = {
+
+        titulo: document.getElementById("titulo").value,
+        genero: document.getElementById("genero").value,
+        duracao: document.getElementById("duracao").value,
+        diretor: document.getElementById("diretor").value,
+
+      };
+
+      const metodo = idfilmes ? "PUT" : "POST";
+      const url = idfilmes ? `${API_URL}/${idfilmes}` : API_URL;
+
+      await fetch(url, {
+        method: metodo,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      document.getElementById("form-filme").reset();
+      carregarUsuarios();
+    }
+
+    async function editarfilmes(idfilmes) {
+      const res = await fetch(`${API_URL}/${idfilmes}`, { method: "GET" });
+      const user = await res.json();
+
+      document.getElementById("idfilmes").value = idfilmes;
+      document.getElementById("titulo").value = user.titulo;
+      document.getElementById("genero").value = user.genero;
+      document.getElementById("duracao").value = user.duracao;
+      document.getElementById("diretor").value = user.diretor;
+    }
+
+    async function excluirfilmes(idfilmes) {
+      if (confirm("Deseja excluir este filme?")) {
+        await fetch(`${API_URL}/${idfilmes}`, { method: "DELETE" });
+        carregarUsuarios();
+      }
+    }
+
+    document.getElementById("form-filme").addEventListener("submit", salvarFilmes);
+    carregarFilmes();
+
+  </script>
+
+
+</body>
+</html>
