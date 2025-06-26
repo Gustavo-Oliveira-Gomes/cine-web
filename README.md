@@ -45,6 +45,6 @@ Este projeto foi desenvolvido por:
 
 Nome do Aluno 1 – Gustavo Oliveira Gomes
 
-Nome do Aluno 2 – Aguardando retorno
+Nome do Aluno 2 – Ágatha Priscila 
 
-Nome do Aluno 3 – Aguardando retorno
+Nome do Aluno 3 – Derik de Liz
