@@ -2,11 +2,11 @@ const db = require('../db/knex');
 
 exports.obter = async (req, res) => {
   try {
-    const filmes = await db("filmes").where({ idfilmes: req.params.id }).first();
+    const filmes = await db("filmes").where({ idfilmes: req.params.idfilmes }).first();
     if (!filmes) {
       return res.status(404).json({ erro: "filme não encontrado" });
     }
-    res.json(usuario);
+    res.json(filmes);
   } catch (error) {
     res.status(500).json({ erro: "Erro ao buscar filme" });
   }
@@ -24,7 +24,7 @@ exports.listar = async (req, res) => {
 exports.inserir = async (req, res) => {
   try {
     const { titulo, duracao, genero, diretor } = req.body;
-    await db('usuarios').insert({ titulo, duracao, genero, diretor });
+    await db('filmes').insert({ titulo, duracao, genero, diretor });
     res.status(201).json({ mensagem: 'Filme inserido com sucesso' });
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao inserir Filme' });
